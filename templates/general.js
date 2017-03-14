@@ -95,7 +95,6 @@ ${name};
   "author": "",
   "license": "",
   "peerDependencies": {
-    ${dependencies}
   }
 }
 `;
