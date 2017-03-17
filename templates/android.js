@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.1'
+        classpath 'com.android.tools.build:gradle:2.2.3'
     }
 }
 
@@ -47,13 +47,30 @@ dependencies {
 }, {
   name: ({ packageIdentifier, name }) =>
     `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}Module.java`,
-  content: ({ packageIdentifier, name }) => `
+  content: ({ packageIdentifier, name, methods }) =>{
+
+    let data='';
+
+    methods.map((method) => {
+        data += `
+  @ReactMethod
+  public void ${method}(ReadableMap params, Callback callback){
+    // ${method} 实现, 返回参数用WritableMap封装, 调用callback.invoke(WritableMap)
+  }
+
+`
+    });
+
+    return `
 package ${packageIdentifier};
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
 public class ${name}Module extends ReactContextBaseJavaModule {
 
@@ -68,7 +85,9 @@ public class ${name}Module extends ReactContextBaseJavaModule {
   public String getName() {
     return "${name}";
   }
-}`,
+  
+  ${data}
+}`},
 }, {
   name: ({ packageIdentifier, name }) =>
     `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}Package.java`,

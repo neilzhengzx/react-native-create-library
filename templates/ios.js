@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   s.author             = { "author" => "author@domain.cn" }
-  s.platform     = :ios, "7.0"
+  s.platform     = :ios, "8.0"
   s.source       = { :git => "https://github.com/author/${name}.git", :tag => "master" }
   s.source_files  = "${name}/**/*.{h,m}"
   s.requires_arc = true
@@ -42,7 +42,20 @@ end
   `,
 }, {
   name: ({ name }) => `${platform}/${name}.m`,
-  content: ({ name }) => `
+  content: ({ name, methods }) =>
+  {
+    let data='';
+
+    methods.map((method) => {
+      data += `
+      
+RCT_EXPORT_METHOD(${method}:(NSDictionary *)params callback:(RCTResponseSenderBlock)callback))
+{
+  //${method} 实现, 需要回传结果用callback(@[XXX]), 数组参数里面就一个NSDictionary元素即可
+}`
+    });
+
+    return `
 #import "${name}.h"
 
 @implementation ${name}
@@ -51,10 +64,14 @@ end
 {
     return dispatch_get_main_queue();
 }
+
 RCT_EXPORT_MODULE()
 
+${data}
+
 @end
-  `,
+  `
+  },
 }, {
   name: ({ name }) => `${platform}/${name}.xcodeproj/project.pbxproj`,
   content: ({ name }) => `// !$*UTF8*$!

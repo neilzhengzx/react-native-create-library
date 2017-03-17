@@ -12,6 +12,7 @@ const DEFAULT_MODULE_PREFIX = 'react-native';
 const DEFAULT_PACKAGE_IDENTIFIER = 'com.reactlibrary';
 const DEFAULT_PLATFORMS = ['android', 'ios', 'windows'];
 const DEFAULT_OVERRIDE_PREFIX = false;
+const DEFAULT_CONFIG_FILE = null;
 
 module.exports = ({
   namespace,
@@ -21,25 +22,29 @@ module.exports = ({
   packageIdentifier = DEFAULT_PACKAGE_IDENTIFIER,
   platforms = DEFAULT_PLATFORMS,
   overridePrefix = DEFAULT_OVERRIDE_PREFIX,
+  config = DEFAULT_CONFIG_FILE
 }) => {
-  if (!overridePrefix) {
-    if (hasPrefix(name)) {
-      throw new Error('Please don\'t include the prefix in the name');
-    }
 
-    if (prefix === 'RCT') {
-      throw new Error(`The \`RCT\` name prefix is reserved for core React modules.
+  if(!config) {
+    if (!overridePrefix) {
+      if (hasPrefix(name)) {
+        throw new Error('Please don\'t include the prefix in the name');
+      }
+
+      if (prefix === 'RCT') {
+        throw new Error(`The \`RCT\` name prefix is reserved for core React modules.
     Please use a different prefix.`);
+      }
     }
-  }
 
-  if (platforms.length === 0) {
-    throw new Error('Please specify at least one platform to generate the library.');
-  }
+    if (platforms.length === 0) {
+      throw new Error('Please specify at least one platform to generate the library.');
+    }
 
-  if (prefix === 'RN') {
-    console.warn(`While \`RN\` is the default prefix,
+    if (prefix === 'RN') {
+      console.warn(`While \`RN\` is the default prefix,
   it is recommended to customize the prefix.`);
+    }
   }
 
   return Promise.all(templates.filter((template) => {
@@ -59,6 +64,7 @@ module.exports = ({
       packageIdentifier,
       namespace: namespace || pascalCase(packageIdentifier).split(/(?=[A-Z])/).join('.'),
       platforms,
+      methods: config.methods,
     };
 
     const filename = path.join(name, template.name(args));
