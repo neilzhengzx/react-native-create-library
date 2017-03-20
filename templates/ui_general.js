@@ -2,13 +2,43 @@
  * Created by sun on 2017/3/20.
  */
 
-module.exports = [{
-  name: () => 'README.md',
-  content: ({ moduleName, packageIdentifier, name, namespace, platforms }) => {
-    let manualInstallation = '';
+module.exports =(views =[]) => {
 
-    if (platforms.indexOf('ios') >= 0) {
-      manualInstallation += `
+  let moduleViews = [];
+
+  if(views.length > 0){
+
+
+    moduleViews.push({
+      name: () => 'index.js',
+      content: ({ name }) => {
+        let data ='';
+
+        views.map((view) => {
+          data += `${view.name}: requireNativeComponent('${view.name}', null),
+  `
+        });
+
+        return `import {
+  requireNativeComponent,
+} from 'react-native';
+
+module.exports ={
+  ${data}
+};
+
+`}
+    });
+
+  }
+
+  return  moduleViews.concat([{
+    name: () => 'README.md',
+    content: ({ moduleName, packageIdentifier, name, namespace, platforms }) => {
+      let manualInstallation = '';
+
+      if (platforms.indexOf('ios') >= 0) {
+        manualInstallation += `
 #### iOS
 
 1. In XCode, in the project navigator, right click \`Libraries\` ➜ \`Add Files to [your project's name]\`
@@ -16,10 +46,10 @@ module.exports = [{
 3. In XCode, in the project navigator, select your project. Add \`lib${name}.a\` to your project's \`Build Phases\` ➜ \`Link Binary With Libraries\`
 4. Run your project (\`Cmd+R\`)<
 `;
-    }
+      }
 
-    if (platforms.indexOf('android') >= 0) {
-      manualInstallation += `
+      if (platforms.indexOf('android') >= 0) {
+        manualInstallation += `
 #### Android
 
 1. Open up \`android/app/src/main/java/[...]/MainActivity.java\`
@@ -35,10 +65,10 @@ module.exports = [{
       compile project(':${moduleName}')
   	\`\`\`
 `;
-    }
+      }
 
-    if (platforms.indexOf('windows') >= 0) {
-      manualInstallation += `
+      if (platforms.indexOf('windows') >= 0) {
+        manualInstallation += `
 #### Windows
 [Read it! :D](https://github.com/ReactWindows/react-native)
 
@@ -47,9 +77,9 @@ module.exports = [{
   - Add \`using ${namespace}.${name};\` to the usings at the top of the file
   - Add \`new ${name}Package()\` to the \`List<IReactPackage>\` returned by the \`Packages\` method
 `;
-    }
+      }
 
-    return `
+      return `
 # ${moduleName}
 
 ## Getting started
@@ -72,17 +102,17 @@ import ${name} from '${moduleName}';
 ${name};
 \`\`\`
   `;
-  },
-}, {
-  name: () => 'package.json',
-  content: ({ moduleName, platforms }) => {
-    let dependencies = '"react-native": "^0.41.2"';
-    if (platforms.indexOf('windows') >= 0) {
-      dependencies += `,
+    },
+  }, {
+    name: () => 'package.json',
+    content: ({ moduleName, platforms }) => {
+      let dependencies = '"react-native": "^0.41.2"';
+      if (platforms.indexOf('windows') >= 0) {
+        dependencies += `,
     "react-native-windows": "0.41.0-rc.1"
 `;
-    }
-    return `
+      }
+      return `
 {
   "name": "${moduleName}",
   "version": "1.0.0",
@@ -100,11 +130,11 @@ ${name};
   }
 }
 `;
-  },
-}, {
-  name: () => '.gitignore',
-  content: ({ platforms }) => {
-    let content = `
+    },
+  }, {
+    name: () => '.gitignore',
+    content: ({ platforms }) => {
+      let content = `
 # OSX
 #
 .DS_Store
@@ -116,8 +146,8 @@ npm-debug.log
 yarn-error.log
   `;
 
-    if (platforms.indexOf('ios') >= 0) {
-      content += `
+      if (platforms.indexOf('ios') >= 0) {
+        content += `
 
 # Xcode
 #
@@ -139,10 +169,10 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
       `;
-    }
+      }
 
-    if (platforms.indexOf('android') >= 0) {
-      content += `
+      if (platforms.indexOf('android') >= 0) {
+        content += `
 
 # Android/IntelliJ
 #
@@ -157,17 +187,19 @@ buck-out/
 \\.buckd/
 *.keystore
       `;
-    }
+      }
 
-    return content;
-  },
-}, {
-  name: () => '.gitattributes',
-  content: ({ platforms }) => {
-    if (platforms.indexOf('ios') >= 0) {
-      return '*.pbxproj -text';
-    }
+      return content;
+    },
+  }, {
+    name: () => '.gitattributes',
+    content: ({ platforms }) => {
+      if (platforms.indexOf('ios') >= 0) {
+        return '*.pbxproj -text';
+      }
 
-    return '';
-  }
-}];
+      return '';
+    }
+  }]);
+
+};

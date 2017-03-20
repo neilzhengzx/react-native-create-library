@@ -38,27 +38,6 @@ module.exports = (platform, views=[]) => {
 
   let moduleViews = [];
 
-  moduleViews.push({
-    name: () => 'index.js',
-    content: ({ name }) => {
-      let data ='';
-
-      views.map((view) => {
-        data += `${view.name}: requireNativeComponent('${view.name}', null),
-`
-      });
-
-      return `import {
-  requireNativeComponent,
-} from 'react-native';
-
-module.exports ={
-  ${data}
-};
-
-`}
-  });
-
   views.map((view) => {
 
     const {
@@ -67,9 +46,9 @@ module.exports ={
     } = view;
 
     sectionsData += `${getsections(index)} /* ${name}.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
-    ${getsections(index+1)} /* ${name}.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
-    ${getsections(index+2)} /* ${name}Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
-    ${getsections(index+3)} /* ${name}Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
+    ${getsections(index+1)} /* ${name}.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.m; sourceTree = "<group>"; };
+    ${getsections(index+2)} /* ${name}Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}Manager.h; sourceTree = "<group>"; };
+    ${getsections(index+3)} /* ${name}Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}Manager.m; sourceTree = "<group>"; };
 `;
     sectionsDataLittle += `${getsections(index)} /* ${name}.h */,
     ${getsections(index+1)} /* ${name}.m */,
@@ -115,7 +94,7 @@ module.exports ={
       name: ({}) => `${platform}/${name}.m`,
       content: ({}) => `
 #import <React/RCTBridge.h>
-#import "${name}"
+#import "${name}.h"
 
 @interface ${name}()
 {

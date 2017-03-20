@@ -19,7 +19,7 @@ module.exports = (views =[]) =>{
 
     const android_ui = require('./ui_android')('android', views);
     const ios_ui = require('./ui_ios')('ios', views);
-    const general_ui = require('./ui_general');
+    const general_ui = require('./ui_general')(views);
 
     return    [].concat(
       general_ui,
