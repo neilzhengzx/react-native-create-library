@@ -44,8 +44,9 @@ module.exports = ({
       console.warn(`While \`RN\` is the default prefix,
   it is recommended to customize the prefix.`);
     }
+  } else {
+    packageIdentifier += `.${config.module}`
   }
-
 
   const templates = require('./templates')(config? config.views : []);
 

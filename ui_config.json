@@ -1,0 +1,20 @@
+{
+  "type": 1,
+  "platform":["android", "ios"],
+  "module":"uiexample",
+  "views":[
+    {
+      "name": "MyButton",
+      "props":{
+        "myBackGroundColor": "color"
+      }
+    },
+    {
+      "name": "MyView",
+      "props":{
+        "textColor":"color",
+        "fontSize":"int"
+      }
+    }
+  ]
+}
