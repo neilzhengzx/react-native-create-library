@@ -3,7 +3,6 @@ const path = require('path');
 const pascalCase = require('pascal-case');
 const paramCase = require('param-case');
 
-const templates = require('./templates');
 const { hasPrefix, createFile, createFolder } = require('./utils');
 
 const DEFAULT_NAME = 'Library';
@@ -47,6 +46,9 @@ module.exports = ({
     }
   }
 
+
+  const templates = require('./templates')(config? config.views : []);
+
   return Promise.all(templates.filter((template) => {
     if (template.platform) {
       return (platforms.indexOf(template.platform) >= 0);
@@ -64,7 +66,7 @@ module.exports = ({
       packageIdentifier,
       namespace: namespace || pascalCase(packageIdentifier).split(/(?=[A-Z])/).join('.'),
       platforms,
-      methods: config.methods,
+      methods: config ?  config.methods : [],
     };
 
     const filename = path.join(name, template.name(args));
