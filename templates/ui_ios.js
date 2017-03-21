@@ -4,12 +4,10 @@
 /* eslint max-len: 0 */
 
 function getsections(index ) {
-  return `B3E7B5${index}1CC2AC0600A0062D`
+  return `B3E7B5${index.toString(16).toLocaleUpperCase()}1CC2AC0600A0062D`
 }
 
-let index = 10;
-let sectionsData='';
-let sectionsDataLittle='';
+
 
 function firstUpperCase(str) {
   return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
@@ -34,9 +32,22 @@ const argnumnetType2 = {
   object: 'NSDictionary *',
   color: 'UIColor *',
 };
+
+const first = 0x88;
+
 module.exports = (platform, views=[]) => {
 
+  let originIndex = first + views.length * 4;
+  let index = first;
+
+  let sectionsData='';
+  let sectionsDataLittle='';
   let moduleViews = [];
+
+  let sectionSources = '';
+  let sectionSourcesLittle = '';
+
+  let view_index = 0;
 
   views.map((view) => {
 
@@ -45,18 +56,33 @@ module.exports = (platform, views=[]) => {
       props,
     } = view;
 
-    sectionsData += `${getsections(index)} /* ${name}.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
-    ${getsections(index+1)} /* ${name}.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.m; sourceTree = "<group>"; };
-    ${getsections(index+2)} /* ${name}Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}Manager.h; sourceTree = "<group>"; };
-    ${getsections(index+3)} /* ${name}Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}Manager.m; sourceTree = "<group>"; };
-`;
-    sectionsDataLittle += `${getsections(index)} /* ${name}.h */,
-    ${getsections(index+1)} /* ${name}.m */,
-    ${getsections(index+2)} /* ${name}Manager.h */,
-    ${getsections(index+3)} /* ${name}Manager.m */,
-`;
+    sectionsData += `\t\t${getsections(index)} /* ${name}.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
+\t\t${getsections(index+1)} /* ${name}.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ${name}.m; sourceTree = "<group>"; };
+\t\t${getsections(index+2)} /* ${name}Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}Manager.h; sourceTree = "<group>"; };
+\t\t${getsections(index+3)} /* ${name}Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ${name}Manager.m; sourceTree = "<group>"; };`;
+    sectionsDataLittle += `\t\t\t\t${getsections(index)} /* ${name}.h */,
+\t\t\t\t${getsections(index+1)} /* ${name}.m */,
+\t\t\t\t${getsections(index+2)} /* ${name}Manager.h */,
+\t\t\t\t${getsections(index+3)} /* ${name}Manager.m */,`;
+
+    sectionSources +=`\t\t${getsections(originIndex)} /* ${name}.m in Sources */ = {isa = PBXBuildFile; fileRef = ${getsections(index+1)} /* ${name}.m */; };
+\t\t${getsections(originIndex+1)} /* ${name}Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = ${getsections(index+3)} /* ${name}Manager.m */; };`;
+
+    sectionSourcesLittle += `\t\t\t\t${getsections(originIndex)} /* ${name}.m in Sources */,
+\t\t\t\t${getsections(originIndex+1)} /* ${name}Manager.m in Sources */,`;
+
+    if(view_index != views.length - 1){
+      sectionsData += '\n';
+      sectionSourcesLittle += '\n';
+      sectionsDataLittle += '\n';
+      sectionSources += '\n';
+    }
 
     index += 4;
+
+    originIndex += 2;
+
+    view_index++;
 
     let data = '';
     let propsDelacation = '';
@@ -80,6 +106,7 @@ module.exports = (platform, views=[]) => {
       name: ({}) => `${platform}/${name}.h`,
       content: ({}) => `#import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <React/RCTView.h>
 
 @interface ${name} : UIView
 
@@ -130,7 +157,7 @@ ${propsFunc}
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
 
-@implementation ${name}
+@implementation ${name}Manager
 
 RCT_EXPORT_MODULE()
 
@@ -191,7 +218,7 @@ end
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B3E7B58A1CC2AC0600A0062D /* ${name}.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* ${name}.m */; };
+${sectionSources}
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -208,7 +235,7 @@ end
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* lib${name}.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = lib${name}.a; sourceTree = BUILT_PRODUCTS_DIR; };
-    ${sectionsData}
+${sectionsData}
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,7 +260,7 @@ end
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-        ${sectionsDataLittle}
+${sectionsDataLittle}
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -294,7 +321,7 @@ end
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* ${name}.m in Sources */,
+${sectionSourcesLittle}
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +425,7 @@ end
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../React/**",
+					"$(SRCROOT)/../../node_modules/react-native/React/**",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
