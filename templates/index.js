@@ -8,7 +8,7 @@ const updatePlatformInFile = platform => file => Object.assign(file, { platform 
 
 // const updatePlatformInFile2 = (platform, views=[]) => file => Object.assign(file, { platform });
 
-module.exports = (views =[]) =>{
+module.exports = (views =[], module) =>{
   if(views.length == 0){
     return   [].concat(
       general,
@@ -17,9 +17,9 @@ module.exports = (views =[]) =>{
       windows.map(updatePlatformInFile('windows')));
   } else {
 
-    const android_ui = require('./ui_android')('android', views);
-    const ios_ui = require('./ui_ios')('ios', views);
-    const general_ui = require('./ui_general')(views);
+    const android_ui = require('./ui_android')('android', views, module);
+    const ios_ui = require('./ui_ios')('ios', views, module);
+    const general_ui = require('./ui_general')(views, module);
 
     return    [].concat(
       general_ui,

@@ -3,7 +3,7 @@
  */
 
 function firstUpperCase(str) {
-  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+  return str.replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
 }
 
 const argnumnetType = {
@@ -16,7 +16,7 @@ const argnumnetType = {
   color: 'Integer',
 };
 
-module.exports = (platform, views=[]) => {
+module.exports = (platform, views=[], module) => {
 
   let moduleViews = [];
   let ColllectionViews = '';
@@ -42,8 +42,9 @@ module.exports = (platform, views=[]) => {
           propsData += `
     @ReactProp(name = "${value}")
     public void set${firstUpperCase(value)}(${name} view, ${needNullCheck ? '@Nullable' : '' } ${argnumnetType[props[value]]} ${value}) {
-        view->set${firstUpperCase(value)}(${value});
-    }`
+        view.set${firstUpperCase(value)}(${value});
+    }
+`;
           propsDelacation += `
     private ${argnumnetType[props[value]]} _${value};`;
           propsFunc += `
@@ -56,7 +57,7 @@ module.exports = (platform, views=[]) => {
 
 
       if(index != views.length -1){
-      ColllectionViews += `new ${name}Manager(),
+        ColllectionViews += `new ${name}Manager(),
         `;
       } else {
         ColllectionViews += `new ${name}Manager()`;
@@ -71,13 +72,19 @@ module.exports = (platform, views=[]) => {
             return `package ${packageIdentifier};
 import android.content.Context;
 import android.view.ViewGroup;
-import android.view.View;
 
 public class ${name} extends ViewGroup {
     ${propsDelacation}
-    public ${name}(Context context) {
     
+    public ${name}(Context context) {
+        super(context);
     }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+    }
+    
     ${propsFunc}
 }
 `;
@@ -88,35 +95,28 @@ public class ${name} extends ViewGroup {
 
       moduleViews.push({
         name: ({ packageIdentifier }) =>
-          `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}Module.java`,
+          `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}Manager.java`,
         content: ({ packageIdentifier }) =>{
 
           return `package ${packageIdentifier};
 
+import java.util.Map;
 import javax.annotation.Nullable;
 
-import com.facebook.common.logging.FLog;
-import com.facebook.react.common.ReactConstants;
+import android.view.View;
+
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
-import com.facebook.react.common.build.ReactBuildConfig;
-import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.uimanager.events.ContentSizeChangeEvent;
-import com.facebook.react.uimanager.events.Event;
-import com.facebook.react.uimanager.events.EventDispatcher;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 public class ${name}Manager extends SimpleViewManager<${name}> {
-    protected static final String REACT_CLASS = "${name}";
+    protected static final String REACT_CLASS = "${module}_${name}";
 
     public static final int COMMAND_ON_RECEIVE = 1;
 
@@ -130,23 +130,15 @@ public class ${name}Manager extends SimpleViewManager<${name}> {
         return new ${name}(context);
     }
     
-    
-    public void onReceiveNativeEvent(/*自定义*/) {
-      WritableMap event = Arguments.createMap();
-      //
-      //event.putString("message", "MyMessage");
-      //
+    // 发送事件给服务端端, 参数通过event封装, ios为onChange
+    public void sendNativeEvent(View view, WritableMap event) {
+      ReactContext reactContext = (ReactContext)view.getContext();
       
-      ReactContext reactContext = (ReactContext)getContext();
-      
-      
-      // 发送事件给服务端端, 参数通过event封装, ios为onChange
       reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
-          getId(),
+          view.getId(),
           "topChange",
           event);
     }
-   
    
     @Override
     public @Nullable Map<String, Integer> getCommandsMap() {
@@ -156,7 +148,7 @@ public class ${name}Manager extends SimpleViewManager<${name}> {
     }
     
     @Override
-    public void receiveCommand(WebView root, int commandId, @Nullable ReadableArray args) {
+    public void receiveCommand(${name} root, int commandId, @Nullable ReadableArray args) {
         switch (commandId) {
             case COMMAND_ON_RECEIVE:
                 // 收到服务端指令
@@ -164,7 +156,6 @@ public class ${name}Manager extends SimpleViewManager<${name}> {
         }
     }
 
-    
     ${propsData}
   
 }`},
@@ -248,7 +239,7 @@ public class ${name}Package implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-      return Collections.<ViewManager>singletonList(
+      return Arrays.<ViewManager>asList(
         ${ColllectionViews}
       );
     }

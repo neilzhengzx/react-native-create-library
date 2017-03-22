@@ -48,7 +48,7 @@ module.exports = ({
     packageIdentifier += `.${config.module}`
   }
 
-  const templates = require('./templates')(config? config.views : []);
+  const templates = require('./templates')(config? config.views : [], config ? config.module : '');
 
   return Promise.all(templates.filter((template) => {
     if (template.platform) {

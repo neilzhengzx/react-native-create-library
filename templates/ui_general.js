@@ -2,7 +2,7 @@
  * Created by sun on 2017/3/20.
  */
 
-module.exports =(views =[]) => {
+module.exports =(views =[], module) => {
 
   let moduleViews = [];
 
@@ -15,7 +15,7 @@ module.exports =(views =[]) => {
         let data ='';
 
         views.map((view) => {
-          data += `${view.name}: requireNativeComponent('${view.name}', null),
+          data += `${view.name}: requireNativeComponent('${module}_${view.name}', null),
   `
         });
 

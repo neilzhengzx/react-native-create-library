@@ -7,10 +7,8 @@ function getsections(index ) {
   return `B3E7B5${index.toString(16).toLocaleUpperCase()}1CC2AC0600A0062D`
 }
 
-
-
 function firstUpperCase(str) {
-  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+  return str.replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
 }
 
 const argnumnetType = {
@@ -35,7 +33,7 @@ const argnumnetType2 = {
 
 const first = 0x88;
 
-module.exports = (platform, views=[]) => {
+module.exports = (platform, views=[], module) => {
 
   let originIndex = first + views.length * 4;
   let index = first;
@@ -111,7 +109,7 @@ module.exports = (platform, views=[]) => {
 @interface ${name} : UIView
 
 // 在view中发送数据给服务器
-@property (nonatomic, copy) RCTDirectEventBlock onChange;
+@property (nonatomic, copy) RCTBubblingEventBlock onChange;
 
 @end
   `,
@@ -159,7 +157,7 @@ ${propsFunc}
 
 @implementation ${name}Manager
 
-RCT_EXPORT_MODULE()
+RCT_EXPORT_MODULE(${module}_${name})
 
 - (UIView *)view
 {
@@ -167,7 +165,7 @@ RCT_EXPORT_MODULE()
   return [[${name} alloc] init];
 }
 
-RCT_EXPORT_VIEW_PROPERTY(onChange, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onChange, RCTBubblingEventBlock)
 ${data}
 
 RCT_EXPORT_METHOD(onReceive: (NSDictionary *) params) {
