@@ -152,6 +152,10 @@ public class ${name}Manager extends SimpleViewManager<${name}> {
         switch (commandId) {
             case COMMAND_ON_RECEIVE:
                 // 收到服务端指令
+                if(args.size() > 0){
+                    //服务端参数内容params
+                    ReadableMap params = args.getMap(0);
+                }
                 break;
         }
     }

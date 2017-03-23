@@ -2,12 +2,21 @@
  * Created by sun on 2017/3/20.
  */
 
+const argnumnetType = {
+  int : 'PropTypes.number',
+  double: 'PropTypes.number',
+  string: 'PropTypes.string',
+  boolean: ' PropTypes.bool',
+  array: 'PropTypes.array',
+  object: 'PropTypes.object',
+  color: 'ColorPropType',
+};
+
 module.exports =(views =[], module) => {
 
   let moduleViews = [];
 
   if(views.length > 0){
-
 
     moduleViews.push({
       name: () => 'index.js',
@@ -29,6 +38,97 @@ module.exports ={
 
 `}
     });
+
+    views.map((view) => {
+
+      const {
+        name,
+        props,
+      } = view;
+
+      let propsData='';
+
+      if(props) {
+        for (let value in props) {
+          propsData+=`\t${value}: ${argnumnetType[props[value]]},\n`
+        }
+      }
+
+      let ref=`this.getBaseRef('${module}_${name}')`;
+
+      moduleViews.push({
+        name: () => `__lib__/${module}_${name}.js`,
+        content: ({}) => {
+
+          return `import React, {Component, PropTypes} from 'react';
+import BaseComponent from '../BaseComponent';
+
+import {
+	requireNativeComponent,
+	ColorPropType,
+	View
+} from 'react-native';
+
+
+export default class ${name} extends BaseComponent
+{
+	state: {
+		style:Object;
+	};
+
+	constructor(props)
+	{
+		super(props);
+
+		this.state = this.props
+	}
+
+	onChange = (event) => {
+		this.dispatchEvent('onChange', event.nativeEvent);
+	};
+
+	render() {
+		let newState = this.getNewState();
+
+		if(!newState) return null;
+
+		const {
+			style={},
+			...other
+		} = newState;
+
+		return (
+			<RCT${name}
+				style={[this.props.style, style]}
+				onChange={this.onChange}
+				ref={${ref}}
+				{...other}
+				>
+				{this.props.children}
+				{this.children}
+			</RCT${name}>
+		);
+	}
+}
+
+${name}.propTypes = {
+	onChange: PropTypes.func,
+	...View.propTypes,
+${propsData}
+};
+
+const RCT${name} = requireNativeComponent('${module}_${name}', ${name},  {
+	nativeOnly: {
+		onChange: true
+	}
+});`
+
+        }
+      })
+    });
+
+
+
 
   }
 
