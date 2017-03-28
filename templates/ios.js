@@ -49,7 +49,7 @@ end
     methods.map((method) => {
       data += `
       
-RCT_EXPORT_METHOD(${method}:(NSDictionary *)params callback:(RCTResponseSenderBlock)callback))
+RCT_EXPORT_METHOD(${method}:(NSDictionary *)params callback:(RCTResponseSenderBlock)callback)
 {
   //${method} 实现, 需要回传结果用callback(@[XXX]), 数组参数里面就一个NSDictionary元素即可
 }`
