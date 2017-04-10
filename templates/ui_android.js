@@ -8,7 +8,7 @@ function firstUpperCase(str) {
 
 const argnumnetType = {
   int : 'int',
-  double: 'Double',
+  double: 'double',
   string: 'String',
   boolean: 'Boolean',
   array: 'ReadableArray',
