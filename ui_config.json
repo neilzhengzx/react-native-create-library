@@ -16,5 +16,25 @@
         "fontSize":"int"
       }
     }
+  ],
+  "option":[
+    {
+    "platform": "ios",
+    "content":[{
+        "type":"scheme",
+        "url-identifer":"weixin",
+        "scheme":"dfdsfsdf"
+      }]
+    },
+    {
+      "platform": "android",
+      "content":[
+        {
+          "type":"meta-data",
+          "name":"",
+          "value":""
+        }
+      ]
+    }
   ]
 }
