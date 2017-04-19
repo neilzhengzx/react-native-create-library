@@ -168,7 +168,7 @@ RCT_EXPORT_MODULE(${module}_${name})
 RCT_EXPORT_VIEW_PROPERTY(onChange, RCTBubblingEventBlock)
 ${data}
 
-RCT_EXPORT_METHOD(onReceive: (NSDictionary *) params) {
+RCT_EXPORT_METHOD(onReceive:(nonnull NSNumber *)reactTag  (NSDictionary *) params) {
     //收到服务端指令
 }
 
