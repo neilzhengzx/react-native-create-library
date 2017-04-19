@@ -49,10 +49,12 @@ module.exports = (platform, views=[], module) => {
 
   views.map((view) => {
 
-    const {
+    let {
       name = '',
       props,
     } = view;
+
+    name = 'RN'+firstUpperCase(module)+firstUpperCase(name);
 
     sectionsData += `\t\t${getsections(index)} /* ${name}.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
 \t\t${getsections(index+1)} /* ${name}.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ${name}.m; sourceTree = "<group>"; };
