@@ -96,10 +96,13 @@ export default class ${name} extends BaseComponent
 			style={},
 			...other
 		} = newState;
+		
+		let newStyle = {…this.props.style, …style};
+    newStyle = this.changeErrorWidthPosition(newStyle);  
 
 		return (
 			<RCT${name}
-				style={[this.props.style, style]}
+				style={newStyle}
 				onChange={this.onChange}
 				ref={${ref}}
 				{...other}
