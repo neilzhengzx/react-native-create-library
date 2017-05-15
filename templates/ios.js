@@ -41,6 +41,16 @@ end
 @end
   `,
 }, {
+  name: ({ name }) => `${platform}/${name}_ios.plist`,
+  content: ({ name }) => `
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+</dict>
+</plist>
+  `,
+}, {
   name: ({ name }) => `${platform}/${name}.m`,
   content: ({ name, methods }) =>
   {
@@ -100,6 +110,7 @@ ${data}
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* lib${name}.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = lib${name}.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A402D8251EC97EA00007C8BB /* ${name}_ios.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ${name}_ios.plist; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* ${name}.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* ${name}.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ${name}.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,6 +137,7 @@ ${data}
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+			  A402D8251EC97EA00007C8BB /* ${name}_ios.plist */,
 				B3E7B5881CC2AC0600A0062D /* ${name}.h */,
 				B3E7B5891CC2AC0600A0062D /* ${name}.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
