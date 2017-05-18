@@ -54,6 +54,8 @@ module.exports = (platform, views=[], module) => {
       props,
     } = view;
 
+    let originName = name;
+
     name = 'RN'+firstUpperCase(module)+firstUpperCase(name);
 
     sectionsData += `\t\t${getsections(index)} /* ${name}.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
@@ -160,7 +162,7 @@ ${propsFunc}
 
 @implementation ${name}Manager
 
-RCT_EXPORT_MODULE(${module}_${name})
+RCT_EXPORT_MODULE(${module}_${originName})
 
 - (UIView *)view
 {
