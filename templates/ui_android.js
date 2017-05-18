@@ -31,6 +31,7 @@ module.exports = (platform, views=[], module) => {
         props,
       } = view;
 
+      let originName = name;
       name = 'RN'+firstUpperCase(name);
 
       let propsData = '';
@@ -118,7 +119,7 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 public class ${name}Manager extends SimpleViewManager<${name}> {
-    protected static final String REACT_CLASS = "${module}_${name}";
+    protected static final String REACT_CLASS = "${module}_${originName}";
 
     public static final int COMMAND_ON_RECEIVE = 1;
 
