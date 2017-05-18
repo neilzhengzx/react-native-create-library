@@ -1,19 +1,13 @@
 {
   "type": 1,
   "platform":["android", "ios"],
-  "module":"uiexample",
+  "module":"sm_signature",
   "views":[
     {
-      "name": "MyButton",
+      "name": "View",
       "props":{
-        "myBackGroundColor": "color"
-      }
-    },
-    {
-      "name": "MyView",
-      "props":{
-        "textColor":"color",
-        "fontSize":"int"
+        "strokeColor": "color",
+        "strokeWidth": "double"
       }
     }
   ],
