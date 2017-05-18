@@ -70,7 +70,7 @@ import {
 } from 'react-native';
 
 
-export default class ${name} extends BaseComponent
+export default class _${name}_ extends BaseComponent
 {
 	state: {
 		style:Object;
@@ -114,13 +114,13 @@ export default class ${name} extends BaseComponent
 	}
 }
 
-${name}.propTypes = {
+_${name}_.propTypes = {
 	onChange: PropTypes.func,
 	...View.propTypes,
 ${propsData}
 };
 
-const RCT${name} = requireNativeComponent('${module}_${name}', ${name},  {
+const RCT${name} = requireNativeComponent('${module}_${name}', _${name}_,  {
 	nativeOnly: {
 		onChange: true
 	}
