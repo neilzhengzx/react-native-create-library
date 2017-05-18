@@ -26,10 +26,12 @@ module.exports = (platform, views=[], module) => {
     let index = 0;
     views.map((view) => {
 
-      const {
+      let {
         name = '',
         props,
       } = view;
+
+      name = 'RN'+firstUpperCase(name);
 
       let propsData = '';
       let propsDelacation = '';
@@ -108,6 +110,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
