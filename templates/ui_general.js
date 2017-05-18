@@ -97,7 +97,7 @@ export default class ${name} extends BaseComponent
 			...other
 		} = newState;
 		
-		let newStyle = {…this.props.style, …style};
+		let newStyle = {...this.props.style, ...style};
     newStyle = this.changeErrorWidthPosition(newStyle);  
 
 		return (
