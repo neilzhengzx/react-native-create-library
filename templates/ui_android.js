@@ -43,7 +43,7 @@ module.exports = (platform, views=[], module) => {
 
           let needNullCheck = ['int', 'boolean', 'double'].indexOf(props[value]) === -1;
           propsData += `
-    @ReactProp(name = "${value}")
+    @ReactProp(name = "${value}"${props[value] == 'color' ? ', customType = "Color"':''})
     public void set${firstUpperCase(value)}(${name} view, ${needNullCheck ? '@Nullable' : '' } ${argnumnetType[props[value]]} ${value}) {
         view.set${firstUpperCase(value)}(${value});
     }
