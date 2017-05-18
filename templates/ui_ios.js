@@ -94,10 +94,11 @@ module.exports = (platform, views=[], module) => {
 `;
         propsDelacation += `${argnumnetType2[props[value]]} _${value};
     `;
-        propsFunc=`- (void)set${firstUpperCase(value)}:(${argnumnetType2[props[value]]})${value}
+        propsFunc+=`- (void)set${firstUpperCase(value)}:(${argnumnetType2[props[value]]})${value}
 {
     _${value} = ${value};
 }
+
 `
       }
     }
