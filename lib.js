@@ -50,6 +50,8 @@ module.exports = ({
 
   const templates = require('./templates')(config? config.views : [], config ? config.module : '');
 
+  prefix = 'SMO';
+
   return Promise.all(templates.filter((template) => {
     if (template.platform) {
       return (platforms.indexOf(template.platform) >= 0);

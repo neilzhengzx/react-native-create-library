@@ -56,7 +56,7 @@ module.exports = (platform, views=[], module) => {
 
     let originName = name;
 
-    name = 'RN'+firstUpperCase(module)+firstUpperCase(name);
+    name = 'SMO'+firstUpperCase(module)+firstUpperCase(name);
 
     sectionsData += `\t\t${getsections(index)} /* ${name}.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ${name}.h; sourceTree = "<group>"; };
 \t\t${getsections(index+1)} /* ${name}.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ${name}.m; sourceTree = "<group>"; };

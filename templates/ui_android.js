@@ -32,7 +32,7 @@ module.exports = (platform, views=[], module) => {
       } = view;
 
       let originName = name;
-      name = 'RN'+firstUpperCase(name);
+      name = 'SMO'+firstUpperCase(name);
 
       let propsData = '';
       let propsDelacation = '';
