@@ -70,6 +70,7 @@ module.exports = ({
       namespace: namespace || pascalCase(packageIdentifier).split(/(?=[A-Z])/).join('.'),
       platforms,
       methods: config ?  config.methods : [],
+      apiName: name
     };
 
     const filename = path.join(name, template.name(args));
