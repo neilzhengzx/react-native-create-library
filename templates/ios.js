@@ -52,7 +52,7 @@ end
   `,
 }, {
   name: ({ name }) => `${platform}/${name}.m`,
-  content: ({ name, methods, apiName }) =>
+  content: ({ name, methods }) =>
   {
     let data='';
 
@@ -75,7 +75,7 @@ RCT_EXPORT_METHOD(${method}:(NSDictionary *)params callback:(RCTResponseSenderBl
     return dispatch_get_main_queue();
 }
 
-RCT_EXPORT_MODULE(${apiName})
+RCT_EXPORT_MODULE()
 
 ${data}
 

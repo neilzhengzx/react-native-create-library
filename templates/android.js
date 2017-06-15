@@ -73,7 +73,7 @@ dependencies {
 }, {
   name: ({ packageIdentifier, name }) =>
     `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}Module.java`,
-    content: ({ packageIdentifier, name, methods, apiName }) =>{
+    content: ({ packageIdentifier, name, methods }) =>{
 
     let data='';
 
@@ -109,7 +109,7 @@ public class ${name}Module extends ReactContextBaseJavaModule {
 
   @Override
   public String getName() {
-    return "${apiName}";
+    return "${name}";
   }
   
   ${data}
