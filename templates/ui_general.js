@@ -60,13 +60,15 @@ module.exports ={
         name: () => `__lib__/${module}_${name}.js`,
         content: ({}) => {
 
-          return `import React, {Component, PropTypes} from 'react';
+          return `import React, { Component } from 'react';
 import BaseComponent from '../BaseComponent';
+import PropTypes from 'prop-types';
 
 import {
 	requireNativeComponent,
 	ColorPropType,
-	View
+	View,
+	ViewPropTypes
 } from 'react-native';
 
 
@@ -116,7 +118,7 @@ export default class _${name}_ extends BaseComponent
 
 _${name}_.propTypes = {
 	onChange: PropTypes.func,
-	...View.propTypes,
+	...ViewPropTypes,
 ${propsData}
 };
 
