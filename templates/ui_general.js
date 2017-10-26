@@ -60,7 +60,7 @@ module.exports ={
         name: () => `__lib__/${module}_${name}.js`,
         content: ({}) => {
 
-          return `import React, { Component } from 'react';
+          return `import React from 'react';
 import BaseComponent from '../BaseComponent';
 import PropTypes from 'prop-types';
 
