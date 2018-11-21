@@ -1,6 +1,6 @@
 module.exports = platform => [{
-  name: ()=> `${platform}/proguard-rules.pro`,
-  content: ()=> `# Add project specific ProGuard rules here.
+  name: () => `${platform}/proguard-rules.pro`,
+  content: () => `# Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
 # in D:\develop\android-sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
@@ -18,7 +18,7 @@ module.exports = platform => [{
 #   public *;
 #}
   `,
-},{
+}, {
   name: () => `${platform}/build.gradle`,
   content: () => `
 buildscript {
@@ -49,7 +49,7 @@ android {
     
     buildTypes {
         release {
-            consumerProguardFiles  getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+          proguardFiles  getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -64,7 +64,7 @@ dependencies {
   `,
 }, {
   name: () => `${platform}/src/main/AndroidManifest.xml`,
-    content: ({ packageIdentifier }) => `
+  content: ({ packageIdentifier }) => `
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="${packageIdentifier}">
 
@@ -73,21 +73,20 @@ dependencies {
 }, {
   name: ({ packageIdentifier, name }) =>
     `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}Module.java`,
-    content: ({ packageIdentifier, name, methods }) =>{
+  content: ({ packageIdentifier, name, methods }) => {
+      let data = '';
 
-    let data='';
-
-    methods.map((method) => {
+      methods.map((method) => {
       data += `
   @ReactMethod
   public void ${method}(ReadableMap params, Callback callback){
     // ${method} 实现, 返回参数用WritableMap封装, 调用callback.invoke(WritableMap)
   }
 
-`
+`;
     });
 
-    return `
+      return `
 package ${packageIdentifier};
 
 import com.facebook.react.bridge.Arguments;
@@ -113,11 +112,12 @@ public class ${name}Module extends ReactContextBaseJavaModule {
   }
   
   ${data}
-}`},
+}`
+ ;},
 }, {
   name: ({ packageIdentifier, name }) =>
     `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}Package.java`,
-    content: ({ packageIdentifier, name }) => `
+  content: ({ packageIdentifier, name }) => `
 package ${packageIdentifier};
 
 import java.util.Arrays;

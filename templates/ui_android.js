@@ -3,11 +3,11 @@
  */
 
 function firstUpperCase(str) {
-  return str.replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
+  return str.replace(/( |^)[a-z]/g, L => L.toUpperCase());
 }
 
 const argnumnetType = {
-  int : 'int',
+  int: 'int',
   double: 'double',
   string: 'String',
   boolean: 'Boolean',
@@ -16,35 +16,31 @@ const argnumnetType = {
   color: 'Integer',
 };
 
-module.exports = (platform, views=[], module) => {
-
-  let moduleViews = [];
+module.exports = (platform, views = [], module) => {
+  const moduleViews = [];
   let ColllectionViews = '';
 
-  if(views.length > 0){
-
+  if (views.length > 0) {
     let index = 0;
     views.map((view) => {
-
       let {
         name = '',
         props,
       } = view;
 
-      let originName = name;
-      name = 'SMO'+firstUpperCase(name);
+      const originName = name;
+      name = `SMO${firstUpperCase(name)}`;
 
       let propsData = '';
       let propsDelacation = '';
       let propsFunc = '';
 
-      if(props){
-        for(let value in props){
-
-          let needNullCheck = ['int', 'boolean', 'double'].indexOf(props[value]) === -1;
+      if (props) {
+        for (const value in props) {
+          const needNullCheck = ['int', 'boolean', 'double'].indexOf(props[value]) === -1;
           propsData += `
-    @ReactProp(name = "${value}"${props[value] == 'color' ? ', customType = "Color"':''})
-    public void set${firstUpperCase(value)}(${name} view, ${needNullCheck ? '@Nullable' : '' } ${argnumnetType[props[value]]} ${value}) {
+    @ReactProp(name = "${value}"${props[value] == 'color' ? ', customType = "Color"' : ''})
+    public void set${firstUpperCase(value)}(${name} view, ${needNullCheck ? '@Nullable' : ''} ${argnumnetType[props[value]]} ${value}) {
         view.set${firstUpperCase(value)}(${value});
     }
 `;
@@ -54,12 +50,12 @@ module.exports = (platform, views=[], module) => {
     public void set${firstUpperCase(value)}(${argnumnetType[props[value]]} ${value}) {
         this._${value} = ${value};
     }
-`
+`;
         }
-      };
+      }
 
 
-      if(index != views.length -1){
+      if (index != views.length - 1) {
         ColllectionViews += `new ${name}Manager(),
         `;
       } else {
@@ -71,8 +67,7 @@ module.exports = (platform, views=[], module) => {
       moduleViews.push({
         name: ({ packageIdentifier }) =>
           `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}.java`,
-        content: ({ packageIdentifier }) =>{
-            return `package ${packageIdentifier};
+        content: ({ packageIdentifier }) => `package ${packageIdentifier};
 import android.content.Context;
 import android.view.ViewGroup;
 
@@ -89,18 +84,14 @@ public class ${name} extends ViewGroup {
     
     ${propsFunc}
 }
-`;
-        }
+`
       });
-
 
 
       moduleViews.push({
         name: ({ packageIdentifier }) =>
           `${platform}/src/main/java/${packageIdentifier.split('.').join('/')}/${name}Manager.java`,
-        content: ({ packageIdentifier }) =>{
-
-          return `package ${packageIdentifier};
+        content: ({ packageIdentifier }) => `package ${packageIdentifier};
 
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -165,16 +156,14 @@ public class ${name}Manager extends SimpleViewManager<${name}> {
 
     ${propsData}
   
-}`},
-      })
-
-
+}`,
+      });
     });
   }
 
   return moduleViews.concat([{
-    name: ()=> `${platform}/proguard-rules.pro`,
-    content: ()=> `# Add project specific ProGuard rules here.
+    name: () => `${platform}/proguard-rules.pro`,
+    content: () => `# Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
 # in D:\develop\android-sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
@@ -192,7 +181,7 @@ public class ${name}Manager extends SimpleViewManager<${name}> {
 #   public *;
 #}
   `,
-  },{
+  }, {
     name: () => `${platform}/build.gradle`,
     content: () => `
 buildscript {
@@ -223,7 +212,7 @@ android {
     
     buildTypes {
         release {
-            consumerProguardFiles  getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles  getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
