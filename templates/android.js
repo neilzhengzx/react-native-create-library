@@ -21,35 +21,25 @@ module.exports = platform => [{
 }, {
   name: () => `${platform}/build.gradle`,
   content: () => `
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
-    }
-}
-
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
 
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
-    }
+  defaultConfig {
+      minSdkVersion rootProject.ext.minSdkVersion
+      targetSdkVersion rootProject.ext.targetSdkVersion
+      versionCode 1
+      versionName "1.0"
+  }
     lintOptions {
         abortOnError false
     }
     
     buildTypes {
         release {
-          proguardFiles  getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+          consumerProguardFiles 'proguard-rules.pro'
         }
     }
 }
