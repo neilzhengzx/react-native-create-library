@@ -23,16 +23,20 @@ module.exports = platform => [{
   content: () => `
 apply plugin: 'com.android.library'
 
-android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
 
-  defaultConfig {
-      minSdkVersion rootProject.ext.minSdkVersion
-      targetSdkVersion rootProject.ext.targetSdkVersion
-      versionCode 1
-      versionName "1.0"
-  }
+android {
+    compileSdkVersion safeExtGet('compileSdkVersion', 26)
+    buildToolsVersion safeExtGet('buildToolsVersion', '26.0.2')
+
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        targetSdkVersion safeExtGet('targetSdkVersion', 26)
+        versionCode 1
+        versionName "1.0"
+    }
     lintOptions {
         abortOnError false
     }

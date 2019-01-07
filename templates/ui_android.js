@@ -186,13 +186,17 @@ public class ${name}Manager extends SimpleViewManager<${name}> {
     content: () => `
 apply plugin: 'com.android.library'
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion safeExtGet('compileSdkVersion', 26)
+    buildToolsVersion safeExtGet('buildToolsVersion', '26.0.2')
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        targetSdkVersion safeExtGet('targetSdkVersion', 26)
         versionCode 1
         versionName "1.0"
     }
