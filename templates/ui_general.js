@@ -229,11 +229,6 @@ ${name};
   "keywords": [
     "react-native"
   ],
-  "rnpm": {
-    "commands": {
-      "postlink": "exit 9527"
-    }
-  },
   "author": "",
   "license": "",
   "peerDependencies": {
