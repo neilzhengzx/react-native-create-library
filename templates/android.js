@@ -53,7 +53,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.react:react-native:+'
+  //Smobiler4.7开始支持gradle3+,4.7版本之前请使用compile替换implementation和api等
+  implementation 'com.facebook.react:react-native:+'
 }
   `,
 }, {
