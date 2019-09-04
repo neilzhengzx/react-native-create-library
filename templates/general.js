@@ -92,7 +92,6 @@ ${name};
   "keywords": [
     "react-native"
   ],
-  //Smobiler5.0去除了rnpm支持,请屏蔽
   "rnpm": {
     "commands": {
       "postlink": "exit 9527"
